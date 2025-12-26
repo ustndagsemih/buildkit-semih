@@ -90,10 +90,9 @@ jobs:
       -
         name: Export BuildKit image as docker tar
         run: |
-          docker buildx build \
-            --platform linux/amd64 \
-            --output type=docker,dest=buildkit-image.tar \
-            .
+          docker buildx bake image \
+            --set *.platform=linux/amd64 \
+            --set *.output=type=docker,dest=buildkit-image.tar
 
       -
         name: Upload image artifact
