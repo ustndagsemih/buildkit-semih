@@ -88,6 +88,21 @@ jobs:
             *.cache-to=type=gha,scope=binaries
             *.no-cache-filter=${{ startsWith(github.ref, 'refs/tags/v') && 'gobuild-base' || '' }}
       -
+        name: Export BuildKit image as docker tar
+        run: |
+          docker buildx build \
+            --platform linux/amd64 \
+            --output type=docker,dest=buildkit-image.tar \
+            .
+
+      -
+        name: Upload image artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: buildkit-image
+          path: buildkit-image.tar
+          retention-days: 1
+      -
         name: Rename provenance and sbom
         working-directory: ${{ env.DESTDIR }}
         run: |
